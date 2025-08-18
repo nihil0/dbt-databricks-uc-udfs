@@ -1,0 +1,20 @@
+# DABs
+.databricks/
+build/
+dist/
+__pycache__/
+*.egg-info
+.venv/
+scratch/**
+!scratch/README.md
+
+# dbt
+target/
+dbt_packages/
+dbt_modules/
+logs/
+dbt_internal_packages/
+dbt_profiles/
+
+# VSCODE
+.vscode/

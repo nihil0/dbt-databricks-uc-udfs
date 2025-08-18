@@ -1,0 +1,32 @@
+# This file defines the structure of this project and how it is deployed
+# to production using Databricks Asset Bundles.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: dbt_with_udf_example
+  uuid: e40a7f2c-fcd5-44a1-a39c-bbe62306f012
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+# Deployment targets.
+# The default schema, catalog, etc. for dbt are defined in dbt_profiles/profiles.yml
+targets:
+  dev:
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+    mode: development
+    default: true
+    workspace:
+      host: WORKSPACE_ID
+
+  prod:
+    mode: production
+    workspace:
+      host: WORKSPACE_ID
+      root_path: /Workspace/Users/me/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: me
+        level: CAN_MANAGE
