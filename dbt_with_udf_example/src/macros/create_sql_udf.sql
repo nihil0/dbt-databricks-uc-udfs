@@ -14,6 +14,5 @@
         {{ f["sql_stmt"] | replace("$CATALOG", target.catalog) | replace("$SCHEMA", target.schema) | trim }}
     $$
     {%- endset -%}
-    {{ print(stmt) }}
-    {# {% do run_query(stmt) %} #}
+    {% do run_query(stmt) %}
 {% endmacro %}
