@@ -10,9 +10,8 @@
     )
     RETURNS {{ f["returns"] }}
     LANGUAGE SQL
-    AS $$
+    RETURN
         {{ f["sql_stmt"] | replace("$CATALOG", target.catalog) | replace("$SCHEMA", target.schema) | trim }}
-    $$
     {%- endset -%}
     {% do run_query(stmt) %}
 {% endmacro %}
