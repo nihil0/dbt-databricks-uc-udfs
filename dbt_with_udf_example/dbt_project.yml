@@ -32,6 +32,40 @@ vars:
     package_name: udf
     module_name: helpers
 
+  sqludfs:
+    can_access_plant: # Row filter
+      args:
+        - name: plant_id
+          type: STRING
+      returns: BOOLEAN
+      sql_stmt: |
+        EXISTS (
+          SELECT 1
+          FROM $CATALOG.$SCHEMA.user_plant_acl acl
+          WHERE (acl.principal = current_user() OR is_account_group_member(acl.principal))
+            AND (acl.plant_id = plant_id OR acl.plant_id = '*')
+        )
+    mask_email:
+      args:
+        - name: email
+          type: STRING
+      returns: STRING
+      sql_stmt: |
+        CASE
+          WHEN instr(email, '@') = 0 THEN NULL
+          ELSE concat(
+                -- first character of username
+                substr(split_part(email, '@', 1), 1, 1),
+                -- middle stars (0 if username length < 2)
+                repeat('*', greatest(length(split_part(email, '@', 1)) - 2, 0)),
+                -- last character of username (empty if username empty)
+                substr(split_part(email, '@', 1), length(split_part(email, '@', 1)), 1),
+                '@',
+                -- domain is whatever remains after the first '@'
+                split_part(email, '@', 2)
+              )
+        END
+
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
